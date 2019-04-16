@@ -59,6 +59,9 @@ gen-certs:
 logs:
 	@docker-compose logs -f
 
+app:
+	@docker-compose exec app
+
 mysql-dump:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
 	@docker exec $(shell docker-compose ps -q mysqldb) mysqldump --all-databases -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)" > $(MYSQL_DUMPS_DIR)/db.sql 2>/dev/null
