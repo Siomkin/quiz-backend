@@ -16,6 +16,9 @@ security:
             security: false
         main:
             anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\AppMainAuthenticator
 
             # activate different ways to authenticate
 
