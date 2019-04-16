@@ -20,6 +20,12 @@ security:
                 authenticators:
                     - App\Security\AppMainAuthenticator
 
+            logout:
+                # The route name the user can go to in order to logout
+                path: app_logout
+                # The name of the route to redirect to after logging out
+                target: app_login
+
             # activate different ways to authenticate
 
             # http_basic: true
@@ -31,5 +37,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/profile, roles: ROLE_USER }

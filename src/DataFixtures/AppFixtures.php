@@ -22,20 +22,22 @@ class AppFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
 
+        $this->loadUsers($manager);
+
         $manager->flush();
     }
 
     private function loadUsers(ObjectManager $manager): void
     {
-        foreach ($this->getUserData() as [$fullname, $username, $password, $email, $roles]) {
+        foreach ($this->getUserData() as [$fullname, $password, $email, $roles]) {
             $user = new User();
-            $user->setFullname($username);
+            $user->setFullname($fullname);
             $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
             $user->setEmail($email);
             $user->setRoles($roles);
 
             $manager->persist($user);
-            $this->addReference($username, $user);
+            //$this->addReference($email, $user);
         }
 
         $manager->flush();
@@ -44,9 +46,10 @@ class AppFixtures extends Fixture
     private function getUserData(): array
     {
         return [
-            ['Jane Doe', 'jane_admin', 'password', 'jane_admin@itransition.com', ['ROLE_ADMIN']],
-            ['Tom Doe', 'tom_admin', 'password', 'tom_admin@itransition.com', ['ROLE_ADMIN']],
-            ['John Doe', 'john_user', 'password', 'john_user@itransition.com', ['ROLE_USER']],
+            ['Siomkin Alexander', 'password', 'siomkin.alexander@gmail.com', ['ROLE_ADMIN']],
+            ['Jane Doe', 'password', 'jane_admin@itransition.com', ['ROLE_ADMIN']],
+            ['Tom Doe', 'password', 'tom_user@itransition.com', ['ROLE_USER']],
+            ['John Doe', 'password', 'john_user@itransition.com', ['ROLE_USER']],
         ];
     }
 }
