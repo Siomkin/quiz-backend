@@ -1,0 +1,1 @@
+[![Codeship Status for Siomkin/itransition](https://app.codeship.com/projects/503f21c0-4339-0137-fa1a-6a9959f71081/status?branch=master)](https://app.codeship.com/projects/336502)
