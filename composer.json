@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-fixtures-bundle": "^3.1",
+        "friendsofphp/php-cs-fixer": "^2.14",
         "symfony/console": "4.2.*",
         "symfony/debug-pack": "^1.0",
         "symfony/dotenv": "4.2.*",
@@ -53,7 +54,8 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "fix": "php-cs-fixer fix --config=\".php_cs\""
     },
     "conflict": {
         "symfony/symfony": "*"
