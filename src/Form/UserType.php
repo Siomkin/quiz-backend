@@ -25,8 +25,6 @@ class UserType extends AbstractType
                     'label' => 'User role',
                     'empty_data' => null,
                     'attr' => ['class' => 'form-control'],
-//                    'expanded'  => true,
-//                    'multiple'  => true,
                 ]
             )
             ->add('state', CheckboxType::class, [
