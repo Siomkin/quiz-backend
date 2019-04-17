@@ -71,6 +71,11 @@ class AppMainAuthenticator extends AbstractFormLoginAuthenticator
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
 
+        if (!$user->getState()) {
+            // fail authentication with a custom error
+            throw new CustomUserMessageAuthenticationException('User is blocked. Contact support.');
+        }
+
         return $user;
     }
 
@@ -85,7 +90,6 @@ class AppMainAuthenticator extends AbstractFormLoginAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // TODO Needs to change in the future
         return new RedirectResponse($this->urlGenerator->generate('admin_index'));
     }
 
