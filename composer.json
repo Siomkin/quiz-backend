@@ -14,6 +14,7 @@
         "symfony/framework-bundle": "4.2.*",
         "symfony/orm-pack": "^1.0",
         "symfony/validator": "4.2.*",
+        "symfony/webpack-encore-bundle": "^1.5",
         "symfony/yaml": "4.2.*",
         "white-october/pagerfanta-bundle": "^1.2"
     },
