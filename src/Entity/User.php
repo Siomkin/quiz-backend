@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -12,6 +15,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    use TimestampableEntity;
+    use SoftDeleteableEntity;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -21,6 +27,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Email()
+     * @Assert\NotBlank()
      */
     private $email;
 
@@ -38,7 +46,12 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $Fullname;
+    private $fullname;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $state = true;
 
     public function getId(): ?int
     {
@@ -74,7 +87,9 @@ class User implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        if (!\count($roles)) {
+            $roles[] = 'ROLE_USER';
+        }
 
         return array_unique($roles);
     }
@@ -120,12 +135,24 @@ class User implements UserInterface
 
     public function getFullname(): ?string
     {
-        return $this->Fullname;
+        return $this->fullname;
     }
 
-    public function setFullname(?string $Fullname): self
+    public function setFullname(?string $fullname): self
     {
-        $this->Fullname = $Fullname;
+        $this->fullname = $fullname;
+
+        return $this;
+    }
+
+    public function getState(): ?bool
+    {
+        return $this->state;
+    }
+
+    public function setState(bool $state): self
+    {
+        $this->state = $state;
 
         return $this;
     }
