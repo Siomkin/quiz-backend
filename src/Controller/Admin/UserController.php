@@ -19,35 +19,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/", name="user_index", methods={"GET"})
+     * @Route("/", name="user_index", defaults={"page": "1"}, methods={"GET"})
+     * @Route("/page/{page<[1-9]\d*>}", methods={"GET"}, name="user_index_paginated")
      */
-    public function index(UserRepository $userRepository): Response
+    public function index(int $page, UserRepository $userRepository): Response
     {
         return $this->render('admin/user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
-    }
-
-    /**
-     * @Route("/new", name="user_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('user_index');
-        }
-
-        return $this->render('admin/user/new.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
+            'users' => $userRepository->selectAll($page),
         ]);
     }
 

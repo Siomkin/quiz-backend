@@ -1,12 +1,63 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="{{ _charset }}"/>
+    <meta name="robots" content="noindex,nofollow"/>
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block head %}
+
+    {% endblock %}
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+</head>
+<body>
+<div class="container">
+    {% block body %}
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="flash-message">
+                <em>Сообщение</em>: {{ flashMessage }}
+            </div>
+        {% endfor %}
+
+        {% block content_header %}
+
+            <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+                <h5 class="my-0 mr-md-auto font-weight-normal">Quizlet</h5>
+                {% if app.user %}
+                    {% block content_header_more %}
+                        <nav class="my-2 my-md-0 mr-md-3">
+                            <a class="p-2 text-dark" href="{{ path('user_index') }}">Users</a>
+                            <a class="p-2 text-dark" href="#">Questions</a>
+                            <a class="p-2 text-dark" href="#">Quizzes</a>
+                        </nav>
+                    {% endblock %}
+                    <nav><span class="" style="color: #666">{{ app.user.fullname }}&nbsp;</span></nav>
+                    <a class="btn btn-outline-primary" href="{{ path('app_logout') }}">{{ 'logout'|trans }}</a>
+                {% endif %}
+            </div>
+
+        {% endblock %}
+
+        <div class="block">
+            {% block content %}{% endblock %}
+        </div>
+
+        {% if code is defined %}
+            <h2>Code behind this page</h2>
+            <div class="block">
+                <div class="symfony-content">{{ code|raw }}</div>
+            </div>
+        {% endif %}
+    {% endblock %}
+</div>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
 </html>
