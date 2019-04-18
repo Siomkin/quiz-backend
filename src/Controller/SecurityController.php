@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\ChangePasswordType;
 use App\Security\AppMainAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,8 +61,31 @@ class SecurityController extends AbstractController
             );
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('security/register.html.twig', [
             'registrationForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/change-password", methods={"GET", "POST"}, name="user_change_password")
+     */
+    public function changePassword(Request $request, UserPasswordEncoderInterface $encoder): Response
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(ChangePasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword($encoder->encodePassword($user, $form->get('newPassword')->getData()));
+
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('app_logout');
+        }
+
+        return $this->render('security/change_password.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
