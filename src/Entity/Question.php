@@ -29,12 +29,12 @@ class Question
     private $description;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=false)
      */
-    private $visible;
+    private $visible = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Answer", mappedBy="question")
+     * @ORM\OneToMany(targetEntity="App\Entity\Answer", mappedBy="question", fetch="EXTRA_LAZY")
      */
     private $answers;
 

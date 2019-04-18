@@ -5,12 +5,18 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\QuizRepository")
  */
 class Quiz
 {
+    use TimestampableEntity;
+    use SoftDeleteableEntity;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -24,6 +30,7 @@ class Quiz
     private $title;
 
     /**
+     * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
@@ -31,7 +38,7 @@ class Quiz
     /**
      * @ORM\Column(type="boolean")
      */
-    private $visible;
+    private $visible = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
