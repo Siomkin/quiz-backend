@@ -15,6 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
+    public const NUM_ITEMS = 3;
+
     use TimestampableEntity;
     use SoftDeleteableEntity;
 
