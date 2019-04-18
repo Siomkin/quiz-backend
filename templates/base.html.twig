@@ -33,7 +33,7 @@
                     {% block content_header_more %}
                         <nav class="my-2 my-md-0 mr-md-3">
                             <a class="p-2 text-dark" href="{{ path('user_index') }}">Users</a>
-                            <a class="p-2 text-dark" href="#">Questions</a>
+                            <a class="p-2 text-dark" href="{{ path('question_index') }}">Questions</a>
                             <a class="p-2 text-dark" href="#">Quizzes</a>
                         </nav>
                     {% endblock %}
@@ -58,6 +58,9 @@
 </div>
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
+{% endblock %}
+{% block bottom_javascripts %}
+
 {% endblock %}
 </body>
 </html>

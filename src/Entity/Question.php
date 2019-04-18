@@ -15,6 +15,7 @@ class Question
 {
     use TimestampableEntity;
     use SoftDeleteableEntity;
+    const NUM_ITEMS = 50;
 
     /**
      * @ORM\Id()
