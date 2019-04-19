@@ -3,7 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Question;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -19,32 +23,21 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
-    // /**
-    //  * @return Question[] Returns an array of Question objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function selectAll($page = 1): Pagerfanta
     {
-        return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('q.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('q')
+            ->select('q')
+            ->orderBy('q.id', 'DESC');
 
-    /*
-    public function findOneBySomeField($value): ?Question
-    {
-        return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->createPaginator($qb->getQuery(), $page);
     }
-    */
+
+    private function createPaginator(Query $query, int $page): Pagerfanta
+    {
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($query));
+        $paginator->setMaxPerPage(Question::NUM_ITEMS);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
 }
