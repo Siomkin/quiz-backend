@@ -14,6 +14,7 @@ class QuizFixtures extends BaseFixture implements DependentFixtureInterface
             $quiz = new Quiz();
 
             $quiz->setTitle($this->faker->sentence());
+            $quiz->setDescription($this->faker->realText(500));
             $quiz->setAuthor($this->getRandomReference('admin_users'));
 
             if ($this->faker->boolean(90)) {

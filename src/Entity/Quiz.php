@@ -2,54 +2,101 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\QuizRepository")
+ * @ApiResource(
+ *     normalizationContext={"groups"={"quizRead"}},
+ *     attributes={"access_control"="is_granted('ROLE_USER')","filters"={"quizzes.visible"}},
+ *     collectionOperations={"get"={"method"="GET"}},
+ *     itemOperations={"get"={"method"="GET"}}
+ * )
+ * @ApiFilter(DateFilter::class, properties={"createdAt"})
  */
 class Quiz
 {
     use TimestampableEntity;
     use SoftDeleteableEntity;
+    public const NUM_ITEMS = 20;
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("quizRead")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(min=3, max=255)
+     * @Groups("quizRead")
      */
     private $title;
 
     /**
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
+     * @Groups("quizRead")
      */
     private $slug;
 
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @Groups("quizRead")
      */
     private $visible = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
      */
     private $author;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Question", inversedBy="quizzes")
+     * @Groups("quizRead")
      */
     private $questions;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     * @Groups("quizRead")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     * @Groups("quizRead")
+     */
+    protected $updatedAt;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     *
+     * @Groups("quizRead")
+     */
+    private $description;
 
     public function __construct()
     {
@@ -119,7 +166,7 @@ class Quiz
 
     public function addQuestion(Question $question): self
     {
-        if (!$this->questions->contains($question)) {
+        if (!$this->hasQuestion($question)) {
             $this->questions[] = $question;
         }
 
@@ -128,9 +175,26 @@ class Quiz
 
     public function removeQuestion(Question $question): self
     {
-        if ($this->questions->contains($question)) {
+        if ($this->hasQuestion($question)) {
             $this->questions->removeElement($question);
         }
+
+        return $this;
+    }
+
+    public function hasQuestion(Question $question): bool
+    {
+        return $this->questions->contains($question);
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

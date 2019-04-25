@@ -11,7 +11,7 @@
                 <th>Id</th>
                 <th>Email</th>
                 <th>Roles</th>
-                <th>Fullname</th>
+                <th>Name</th>
                 <th>Is Active</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
@@ -24,8 +24,8 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.fullname }}</td>
-                <td>{{ user.state ? '<span class="badge badge-success">Yes</span>' : 'No' }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.enabled ? '<span class="badge badge-success">Yes</span>' : 'No' }}</td>
                 <td><small>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i') : '' }}</small></td>
                 <td><small>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i') : '' }}</small></td>
                 <td>

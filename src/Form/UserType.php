@@ -16,7 +16,7 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('fullname', null, ['label' => 'User name'])
+            ->add('name', null, ['label' => 'User name'])
             ->add(
                 'roles',
                 ChoiceType::class,
@@ -27,7 +27,7 @@ class UserType extends AbstractType
                     'attr' => ['class' => 'form-control'],
                 ]
             )
-            ->add('state', CheckboxType::class, [
+            ->add('enabled', CheckboxType::class, [
                 'label' => 'Active User',
                 'required' => false,
             ]);

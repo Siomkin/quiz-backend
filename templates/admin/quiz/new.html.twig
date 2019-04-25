@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Quiz{% endblock %}
+
+{% block content %}
+    <h1>Create new Quiz</h1>
+
+    {{ include('admin/quiz/_form.html.twig') }}
+
+    <a href="{{ path('quiz_index') }}">back to list</a>
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app_react') }}
+{% endblock %}

@@ -17,12 +17,12 @@ class UserFixture extends BaseFixture
 
     protected function loadData(ObjectManager $manager)
     {
-
         $this->createMany(3, 'admin_users', function ($i) {
             $user = new User();
             $user->setEmail(sprintf('admin%d@it.com', $i));
-            $user->setFullname($this->faker->firstName);
+            $user->setName($this->faker->firstName);
             $user->setRoles(['ROLE_ADMIN']);
+            $user->setEnabled($this->faker->boolean(95));
 
             $user->setPassword($this->passwordEncoder->encodePassword(
                 $user,
@@ -35,8 +35,8 @@ class UserFixture extends BaseFixture
         $this->createMany(100, 'Users', function ($i) use ($manager) {
             $user = new User();
             $user->setEmail(sprintf('user%d@it.com', $i));
-            $user->setFullname($this->faker->firstName);
-
+            $user->setName($this->faker->firstName);
+            $user->setEnabled($this->faker->boolean(75));
             $user->setPassword($this->passwordEncoder->encodePassword(
                 $user,
                 'pass'
@@ -49,7 +49,6 @@ class UserFixture extends BaseFixture
 
             return $user;
         });
-
 
         $manager->flush();
     }

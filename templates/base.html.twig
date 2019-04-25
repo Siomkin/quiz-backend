@@ -32,12 +32,12 @@
                 {% if app.user %}
                     {% block content_header_more %}
                         <nav class="my-2 my-md-0 mr-md-3">
-                            <a class="p-2 text-dark" href="{{ path('user_index') }}">Users</a>
+                            <a class="p-2 text-dark" href="{{ path('quiz_index') }}">Quizzes</a>
                             <a class="p-2 text-dark" href="{{ path('question_index') }}">Questions</a>
-                            <a class="p-2 text-dark" href="#">Quizzes</a>
+                            <a class="p-2 text-dark" href="{{ path('user_index') }}">Users</a>
                         </nav>
                     {% endblock %}
-                    <nav><span class="" style="color: #666">{{ app.user.fullname }}&nbsp;</span></nav>
+                    <nav><span class="" style="color: #666">{{ app.user.name }}&nbsp;</span></nav>
                     <a class="btn btn-outline-primary" href="{{ path('app_logout') }}">{{ 'logout'|trans }}</a>
                 {% endif %}
             </div>

@@ -71,11 +71,6 @@ class AppMainAuthenticator extends AbstractFormLoginAuthenticator
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
 
-        if (!$user->getState()) {
-            // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('User is blocked. Contact support.');
-        }
-
         return $user;
     }
 

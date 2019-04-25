@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
 use App\Form\ChangePasswordType;
+use App\Form\RegistrationFormType;
 use App\Security\AppMainAuthenticator;
+use App\Security\UserConfirmationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -102,5 +103,15 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         throw new \Exception('This should never be reached!');
+    }
+
+    /**
+     * @Route("/confirm-user/{token}", name="default_confirm_token")
+     */
+    public function confirmUser(string $token, UserConfirmationService $userConfirmationService)
+    {
+        $userConfirmationService->confirmUser($token);
+
+        return $this->redirectToRoute('api_doc');
     }
 }

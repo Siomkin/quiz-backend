@@ -8,13 +8,12 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class QuestionFixtures extends BaseFixture
 {
-
     protected function loadData(ObjectManager $manager)
     {
         $this->createMany(100, 'Questions', function ($count) use ($manager) {
             $question = new Question();
 
-            $question->setDescription($this->faker->sentence() . '?');
+            $question->setDescription($this->faker->sentence().'?');
             if ($this->faker->boolean(90)) {
                 $question->setCreatedAt($this->faker->dateTimeBetween('-100 days', '-1 days'));
             }
@@ -41,7 +40,6 @@ class QuestionFixtures extends BaseFixture
                 $comment->setCorrect($isCorrect);
                 if ($isCorrect) {
                     $comment->setDescription('This is correct answer.');
-
                 }
                 $manager->persist($comment);
             }
@@ -51,5 +49,4 @@ class QuestionFixtures extends BaseFixture
 
         $manager->flush();
     }
-
 }

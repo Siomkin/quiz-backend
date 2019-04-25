@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quiz index{% endblock %}
+
+{% block content %}
+    <h1>Quiz index</h1>
+    <div class="pt-1 pb-1 text-right">
+        <div>
+            <a href="{{ path('quiz_new') }}" class="btn btn-dark">Create new</a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Visible</th>
+            <th>CreatedAt</th>
+            <th>UpdatedAt</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for quiz in quizzes %}
+            <tr>
+                <td>{{ quiz.id }}</td>
+                <td>
+                    <p>{{ quiz.title }}<br>
+                        <small>{{ quiz.slug }}</small>
+                    </p>
+                </td>
+                <td>{{ quiz.visible ? 'Yes' : 'No' }}</td>
+                <td>{{ quiz.createdAt ? quiz.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ quiz.updatedAt ? quiz.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('quiz_show', {'id': quiz.id}) }}">show</a>
+                    <a href="{{ path('quiz_edit', {'id': quiz.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    {% if quizzes.haveToPaginate %}
+        <div class="navigation text-center">
+            {{ pagerfanta(quizzes, 'twitter_bootstrap4_translated', {routeName: 'quiz_index_paginated', routeParams: app.request.query.all}) }}
+        </div>
+    {% endif %}
+
+{% endblock %}
