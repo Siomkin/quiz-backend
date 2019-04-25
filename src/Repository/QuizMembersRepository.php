@@ -2,8 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Quiz;
 use App\Entity\QuizMembers;
+use App\Entity\User;
+use App\Repository\Traits\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -14,37 +18,30 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class QuizMembersRepository extends ServiceEntityRepository
 {
+    use Paginator;
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, QuizMembers::class);
     }
 
-    // /**
-    //  * @return QuizMembers[] Returns an array of QuizMembers objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Quiz  $quiz
+     * @param User  $user
+     * @param int   $page
+     * @param array $options
+     *
+     * @return Pagerfanta
+     */
+    public function selectPassingForUserByQuiz(Quiz $quiz, User $user, $page = 1, $options = []): Pagerfanta
     {
-        return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('q.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('qm')
+            ->select('qm')
+            ->andWhere('qm.quiz = :quiz')->setParameter('quiz', $quiz)
+            ->andWhere('qm.member = :member')->setParameter('member', $user);
 
-    /*
-    public function findOneBySomeField($value): ?QuizMembers
-    {
-        return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $qb->orderBy('qm.id', 'DESC');
+
+        return $this->createPaginator($qb->getQuery(), $page, QuizMembers::NUM_ITEMS_FOR_QUIZ_PAGE);
     }
-    */
 }

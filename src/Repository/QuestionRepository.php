@@ -3,9 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Question;
+use App\Repository\Traits\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,6 +16,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class QuestionRepository extends ServiceEntityRepository
 {
+    use Paginator;
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Question::class);
@@ -28,15 +29,6 @@ class QuestionRepository extends ServiceEntityRepository
             ->select('q')
             ->orderBy('q.id', 'DESC');
 
-        return $this->createPaginator($qb->getQuery(), $page);
-    }
-
-    private function createPaginator(Query $query, int $page): Pagerfanta
-    {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($query));
-        $paginator->setMaxPerPage(Question::NUM_ITEMS);
-        $paginator->setCurrentPage($page);
-
-        return $paginator;
+        return $this->createPaginator($qb->getQuery(), $page, Question::NUM_ITEMS);
     }
 }

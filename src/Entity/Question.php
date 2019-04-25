@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,12 +11,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\QuestionRepository")
- * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
- *     attributes={"access_control"="is_granted('ROLE_USER')"},
- *     collectionOperations={"get"={"method"="GET"}},
- *     itemOperations={"get"={"method"="GET"}}
- * )
  */
 class Question
 {
@@ -29,26 +22,26 @@ class Question
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read","quizRead"})
+     * @Groups({"read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
      *
-     * @Groups({"read","quizRead"})
+     * @Groups({"read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
      *
-     * @Groups({"read","quizRead"})
+     * @Groups({"read"})
      */
     private $visible = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Answer", mappedBy="question", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="App\Entity\Answer", mappedBy="question")
      */
     private $answers;
 

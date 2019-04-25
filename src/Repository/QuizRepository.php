@@ -3,9 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Quiz;
+use App\Repository\Traits\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,26 +16,33 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class QuizRepository extends ServiceEntityRepository
 {
+    use Paginator;
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Quiz::class);
     }
 
-    public function selectAll($page = 1): Pagerfanta
+    public function getItem($id, $visible = 1): Pagerfanta
+    {
+        $qb = $this->createQueryBuilder('q')
+            ->select('q')
+            ->andWhere('q.visible = :visible')->setParameter('visible', $visible)
+            ->andWhere('q.id = :id')->setParameter('id', $id);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function selectAll($page = 1, $query = [], $visible = null): Pagerfanta
     {
         $qb = $this->createQueryBuilder('q')
             ->select('q')
             ->orderBy('q.id', 'DESC');
 
-        return $this->createPaginator($qb->getQuery(), $page);
-    }
+        if (null !== $visible) {
+            $qb->andWhere('q.visible = :visible')->setParameter('visible', $visible);
+        }
 
-    private function createPaginator(Query $query, int $page): Pagerfanta
-    {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($query));
-        $paginator->setMaxPerPage(Quiz::NUM_ITEMS);
-        $paginator->setCurrentPage($page);
-
-        return $paginator;
+        return $this->createPaginator($qb->getQuery(), $page, Quiz::NUM_ITEMS);
     }
 }

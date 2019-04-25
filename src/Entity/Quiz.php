@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,13 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\QuizRepository")
- * @ApiResource(
- *     normalizationContext={"groups"={"quizRead"}},
- *     attributes={"access_control"="is_granted('ROLE_USER')","filters"={"quizzes.visible"}},
- *     collectionOperations={"get"={"method"="GET"}},
- *     itemOperations={"get"={"method"="GET"}}
- * )
- * @ApiFilter(DateFilter::class, properties={"createdAt"})
  */
 class Quiz
 {
@@ -34,7 +24,7 @@ class Quiz
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("quizRead")
+     * @Groups({"quizRead","simpleQuiz"})
      */
     private $id;
 
@@ -42,7 +32,7 @@ class Quiz
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min=3, max=255)
-     * @Groups("quizRead")
+     * @Groups({"quizRead","simpleQuiz"})
      */
     private $title;
 
@@ -51,14 +41,14 @@ class Quiz
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
-     * @Groups("quizRead")
+     * @Groups({"quizRead","simpleQuiz"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="boolean")
      *
-     * @Groups("quizRead")
+     * @Groups({"quizRead","simpleQuiz"})
      */
     private $visible = 0;
 
@@ -79,7 +69,7 @@ class Quiz
      * @var \DateTime
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
-     * @Groups("quizRead")
+     * @Groups({"quizRead","simpleQuiz"})
      */
     protected $createdAt;
 
@@ -94,7 +84,7 @@ class Quiz
     /**
      * @ORM\Column(type="text", nullable=true)
      *
-     * @Groups("quizRead")
+     * @Groups({"quizRead","simpleQuiz"})
      */
     private $description;
 

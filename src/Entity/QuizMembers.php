@@ -5,6 +5,9 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\QuizMembersRepository")
@@ -12,46 +15,78 @@ use Doctrine\ORM\Mapping as ORM;
 class QuizMembers
 {
     /**
+     * Polling for user on my quiz page.
+     */
+    public const NUM_ITEMS = 20;
+
+    /**
+     * Last polling for user on quiz page.
+     */
+    public const NUM_ITEMS_FOR_QUIZ_PAGE = 2;
+
+    /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @Groups({"startNew","get"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Quiz")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups({"get"})
+     *
+     * @Assert\NotBlank()
      */
     private $quiz;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups({"get"})
+     *
+     * @Assert\NotBlank()
      */
     private $member;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     * @Groups({"get"})
+     *
+     * @Assert\DateTime()
      */
     private $started_at;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @Groups({"get"})
      */
     private $completed_at;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     *
+     * @Groups({"get"})
      */
     private $questionsCount;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     *
+     * @Groups({"get"})
      */
     private $correctAnswered;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     *
+     * @Groups({"get"})
      */
     private $points;
 
@@ -59,6 +94,16 @@ class QuizMembers
      * @ORM\OneToMany(targetEntity="App\Entity\QuizMemberAnswers", mappedBy="member")
      */
     private $quizMemberAnswers;
+
+    /**
+     * @ORM\Column(type="guid")
+     *
+     * @Assert\Uuid()
+     * @Assert\NotBlank()
+     *
+     * @Groups({"startNew","get"})
+     */
+    private $uuid;
 
     public function __construct()
     {
@@ -181,6 +226,18 @@ class QuizMembers
                 $quizMemberAnswer->setMember(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(string $uuid): self
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

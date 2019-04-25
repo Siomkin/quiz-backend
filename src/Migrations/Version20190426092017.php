@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190424114952 extends AbstractMigration
+final class Version20190426092017 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -22,7 +22,7 @@ final class Version20190424114952 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE quiz ADD description LONGTEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE quiz_members ADD uuid CHAR(36) NOT NULL COMMENT \'(DC2Type:guid)\'');
     }
 
     public function down(Schema $schema): void
@@ -30,6 +30,6 @@ final class Version20190424114952 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE quiz DROP description');
+        $this->addSql('ALTER TABLE quiz_members DROP uuid');
     }
 }

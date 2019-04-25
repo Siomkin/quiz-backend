@@ -2,7 +2,6 @@
 
 namespace App\EventSubscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\UserConfirmation;
 use App\Security\UserConfirmationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -28,7 +27,7 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::VIEW => [
                 'confirmUser',
-                EventPriorities::POST_VALIDATE,
+          //      EventPriorities::POST_VALIDATE,
             ],
         ];
     }

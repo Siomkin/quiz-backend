@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -13,46 +12,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(
- *     itemOperations={
- *         "get"={
- *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
- *             "normalization_context"={
- *                 "groups"={"get"}
- *             }
- *         },
- *         "put"={
- *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
- *             "denormalization_context"={
- *                 "groups"={"put"}
- *             },
- *             "normalization_context"={
- *                 "groups"={"get"}
- *             }
- *         },
- *         "put-reset-password"={
- *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
- *             "method"="PUT",
- *             "path"="/users/{id}/reset-password",
- *             "controller"=ResetPasswordAction::class,
- *             "denormalization_context"={
- *                 "groups"={"put-reset-password"}
- *             },
- *             "validation_groups"={"put-reset-password"}
- *         }
- *     },
- *     collectionOperations={
- *         "post"={
- *             "denormalization_context"={
- *                 "groups"={"post"}
- *             },
- *             "normalization_context"={
- *                 "groups"={"get"}
- *             },
- *             "validation_groups"={"post"}
- *         }
- *     },
- * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
@@ -72,7 +31,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get"})
+     * @Groups({"get","profile"})
      */
     private $id;
 
@@ -96,7 +55,6 @@ class User implements UserInterface
      * @Groups({"post"})
      */
     private $password;
-
 
     /**
      * @Groups({"post"})
@@ -140,7 +98,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get", "post", "put"})
+     * @Groups({"get", "profile"})
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=5, max=255, groups={"post", "put"})
      */
@@ -190,7 +148,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -219,7 +177,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string)$this->password;
+        return (string) $this->password;
     }
 
     public function setPassword(string $password): self
