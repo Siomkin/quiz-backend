@@ -31,7 +31,7 @@ class QuizController extends AbstractFOSRestController
     /**
      *  Get a list of quizzes.
      *
-     * @Route("/quizzes", name="api_quizzes", methods={"GET"})
+     * @Rest\Get("/quizzes", name="api_quizzes")
      *
      * @Rest\QueryParam(name="_page", requirements="\d+", default="1", description="Page of the overview.")
      *
@@ -56,7 +56,7 @@ class QuizController extends AbstractFOSRestController
     /**
      * Get a quiz information.
      *
-     * @Route("/quizzes/{id}", name="api_quiz_item", methods={"GET"})
+     * @Rest\Get("/quizzes/{id}", name="api_quiz_item")
      *
      * @param int                 $id
      * @param NormalizerInterface $normalizer

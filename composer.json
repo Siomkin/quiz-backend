@@ -7,6 +7,7 @@
         "ext-iconv": "*",
         "friendsofsymfony/rest-bundle": "^2.5",
         "fzaninotto/faker": "^1.8",
+        "guzzlehttp/guzzle": "^6.3",
         "lexik/jwt-authentication-bundle": "^2.6",
         "limenius/react-bundle": "^3.0",
         "mark-gerarts/automapper-plus-bundle": "^1.1",
@@ -39,7 +40,8 @@
         "symfony/test-pack": "^1.0",
         "symfony/maker-bundle": "^1.11",
         "thomas-schulz/doctrine-phpstorm-meta": "^1.2",
-        "thomas-schulz/symfony-meta": "^1.2"
+        "thomas-schulz/symfony-meta": "^1.2",
+        "ext-json": "*"
     },
     "config": {
         "preferred-install": {

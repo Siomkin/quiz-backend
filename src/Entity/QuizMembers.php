@@ -74,7 +74,7 @@ class QuizMembers
      *
      * @Groups({"get"})
      */
-    private $questionsCount;
+    private $attempts;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -163,14 +163,14 @@ class QuizMembers
         return $this;
     }
 
-    public function getQuestionsCount(): ?int
+    public function getAttempts(): ?int
     {
-        return $this->questionsCount;
+        return $this->attempts;
     }
 
-    public function setQuestionsCount(?int $questionsCount): self
+    public function setAttempts(?int $attempts): self
     {
-        $this->questionsCount = $questionsCount;
+        $this->attempts = $attempts;
 
         return $this;
     }

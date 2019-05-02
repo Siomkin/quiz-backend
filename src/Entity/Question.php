@@ -16,27 +16,27 @@ class Question
 {
     use TimestampableEntity;
     use SoftDeleteableEntity;
-    const NUM_ITEMS = 50;
+    public const NUM_ITEMS = 50;
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
      *
-     * @Groups({"read"})
+     * @Groups({"get"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
      *
-     * @Groups({"read"})
+     * @Groups({"get"})
      */
     private $visible = 0;
 

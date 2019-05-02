@@ -9,8 +9,5 @@ class QuizServiceTest extends TestCase
     public function testSomething()
     {
         $this->assertTrue(true);
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 }

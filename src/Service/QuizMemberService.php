@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Pagerfanta\Pagerfanta;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class QuizMemberService
 {
@@ -49,6 +50,45 @@ class QuizMemberService
     }
 
     /**
+     * Get quiz passing by user.
+     *
+     * @param string $uuid
+     * @param User   $user
+     *
+     * @throws NotFoundHttpException
+     *
+     * @return QuizMembers|null
+     */
+    public function getQuizMemberByUuid(string $uuid, User $user): ?QuizMembers
+    {
+        $member = $this->quizMembersRepository->findOneBy(['uuid' => $uuid, 'member' => $user]);
+
+        if (null === $member) {
+            throw new NotFoundHttpException('Quiz member not found');
+        }
+
+        return $member;
+    }
+
+    /**
+     * @param QuizMembers $member
+     *
+     * @throws ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return QuizMembers
+     */
+    public function increaseAttempts(QuizMembers $member): QuizMembers
+    {
+        $member->setAttempts((int) $member->getAttempts() + 1);
+
+        $this->em->persist($member);
+        $this->em->flush();
+
+        return $member;
+    }
+
+    /**
      * Start new quiz for user.
      *
      * @param Quiz $quiz
@@ -70,6 +110,20 @@ class QuizMemberService
         $this->em->flush();
 
         return $newMember;
+    }
+
+    public function completeQuiz(QuizMembers $quizMember, int $correctAnswered): QuizMembers
+    {
+        $quizMember->setCompletedAt(new \DateTime());
+
+        $quizMember->setCorrectAnswered($correctAnswered);
+
+        $quizMember->setPoints(round($correctAnswered / $quizMember->getAttempts() * 100));
+
+        $this->em->persist($quizMember);
+        $this->em->flush();
+
+        return $quizMember;
     }
 
     /**

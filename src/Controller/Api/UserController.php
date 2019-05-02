@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +18,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class UserController extends AbstractFOSRestController
 {
     /**
-     * @Route("/users/{id}", name="api_user_show", methods={"GET"})
+     * @Rest\Get("/users/{id}", name="api_user_show")
      *
      * @param User                $user
      * @param NormalizerInterface $normalizer

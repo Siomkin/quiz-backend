@@ -3,8 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
+ * @ORM\Table(
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="member_id", columns={
+ *         "member_id", "question_id"
+ *     })}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\QuizMemberAnswersRepository")
  */
 class QuizMemberAnswers
@@ -39,6 +45,7 @@ class QuizMemberAnswers
     private $correct;
 
     /**
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $answered_at;
