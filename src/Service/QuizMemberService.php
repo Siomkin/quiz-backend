@@ -127,6 +127,28 @@ class QuizMemberService
     }
 
     /**
+     * @param Quiz $quiz
+     *
+     * @return array
+     */
+    public function getTopResults(Quiz $quiz): array
+    {
+        return $this->quizMembersRepository->getTopResults($quiz);
+    }
+
+    /**
+     * @param QuizMembers $quizMember
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return int
+     */
+    public function getMemberPlace(QuizMembers $quizMember): int
+    {
+        return $this->quizMembersRepository->getMemberPlace($quizMember);
+    }
+
+    /**
      * Get data about last passing for the user on quiz page.
      *
      * @param Quiz $quiz

@@ -138,4 +138,29 @@ class QuizMemberController extends AbstractFOSRestController
             ]
         );
     }
+
+    /**
+     * @Rest\Get("/quiz/{uuid}/top", name="api_quiz_top")
+     *
+     * @param string $uuid
+     *
+     * @throws NonUniqueResultException
+     * @return View
+     */
+    public function quizMemberTopResultAction(string $uuid): View
+    {
+        $user = $this->getUser();
+
+        $quizMember = $this->quizMemberService->getQuizMemberByUuid($uuid, $user);
+
+        $topResults = $this->quizMemberService->getTopResults($quizMember->getQuiz());
+        $memberPlace = $this->quizMemberService->getMemberPlace($quizMember);
+
+        return $this->view(
+            [
+                'top' => $topResults,
+                'memberPlace' => $memberPlace,
+            ]
+        );
+    }
 }

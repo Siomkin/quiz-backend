@@ -44,4 +44,50 @@ class QuizMembersRepository extends ServiceEntityRepository
 
         return $this->createPaginator($qb->getQuery(), $page, QuizMembers::NUM_ITEMS_FOR_QUIZ_PAGE);
     }
+
+    /**
+     * @param Quiz $quiz
+     * @param int  $limit
+     *
+     * @return array
+     */
+    public function getTopResults(Quiz $quiz, $limit = 3): array
+    {
+        $qb = $this->createQueryBuilder('qm')
+            ->select('qm.id', 'qm.uuid', 'qm.started_at', 'qm.completed_at', 'qm.points',
+                'user.name as username',
+                'timestampdiff(SECOND, qm.started_at, qm.completed_at) as time')
+            ->join('qm.member', 'user')
+            ->andWhere('qm.quiz = :quiz')->setParameter('quiz', $quiz)
+            ->andWhere('qm.completed_at IS NOT NULL');
+        $qb->orderBy('qm.points', 'DESC');
+        $qb->addOrderBy('time', 'ASC');
+
+        $qb->setMaxResults($limit);
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @param QuizMembers $quizMember
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return int
+     */
+    public function getMemberPlace(QuizMembers $quizMember): int
+    {
+        $qb = $this->createQueryBuilder('qm');
+        $qb->select('COUNT(qm.id) + 1')
+            ->where(
+                'qm.points > :points OR (qm.points = :points AND timestampdiff(SECOND, qm.started_at, qm.completed_at) < :time)'
+            )
+            ->setParameter('points', $quizMember->getPoints())
+            ->andWhere('qm.quiz = :quiz')->setParameter('quiz', $quizMember->getQuiz())
+            ->setParameter('time',
+                $quizMember->getCompletedAt()->getTimestamp() - $quizMember->getStartedAt()->getTimestamp())
+            ->andWhere('qm.completed_at IS NOT NULL');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }
